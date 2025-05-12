@@ -1,47 +1,53 @@
-require('dotenv').config()
+require('dotenv').config();
 
 const cors = require('cors');
-const express = require('express')
-const mongoose = require('mongoose')
-const workoutRoutes = require('./routes/workouts')
-const userRoutes = require('./routes/user')
+const express = require('express');
+const mongoose = require('mongoose');
+const workoutRoutes = require('./routes/workouts');
+const userRoutes = require('./routes/user');
 
-// express app
-const app = express()
+const app = express();
 
-// CORS options
 const corsOptions = {
-  origin: 'https://mern-stack-notes.vercel.app',  
+  origin: 'https://mern-stack-notes.vercel.app',
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization'],  // Ensure you allow 'Authorization' header
-  credentials: true, // If you are using cookies or authentication that needs credentials
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: true,
 };
 
 // Apply CORS globally
 app.use(cors(corsOptions));
 
-// Ensure Express handles preflight requests automatically
-app.options('*', cors(corsOptions))
-// middleware
-app.use(express.json())
-
+// Safe custom middleware to handle all OPTIONS requests
 app.use((req, res, next) => {
-  console.log(req.path, req.method)
-  next()
-})
+  if (req.method === 'OPTIONS') {
+    res.header('Access-Control-Allow-Origin', 'https://mern-stack-notes.vercel.app');
+    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+    res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+    res.header('Access-Control-Allow-Credentials', 'true');
+    return res.sendStatus(200);
+  }
+  next();
+});
 
-// routes
-app.use('/api/workouts', workoutRoutes)
-app.use('/api/user', userRoutes)
+// JSON parser
+app.use(express.json());
 
-// connect to db
+// Logger
+app.use((req, res, next) => {
+  console.log(req.path, req.method);
+  next();
+});
+
+// Routes
+app.use('/api/workouts', workoutRoutes);
+app.use('/api/user', userRoutes);
+
+// DB connection
 mongoose.connect(process.env.MONGO_URI)
   .then(() => {
-    // listen for requests
     app.listen(process.env.PORT || 4000, () => {
-      console.log('connected to db & listening on port', process.env.PORT)
-    })
+      console.log('Connected to DB & listening on port', process.env.PORT)
+    });
   })
-  .catch((error) => {
-    console.log(error)
-  })
+  .catch((error) => console.log(error));
