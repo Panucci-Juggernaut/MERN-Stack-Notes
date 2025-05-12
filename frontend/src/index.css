@@ -22,6 +22,9 @@ header .container {
   align-items: center;
   justify-content: space-between;
 }
+header h1 {
+  margin: 0;
+}
 header a {
   color: #333;
   text-decoration: none;
@@ -127,4 +130,36 @@ form.signup, form.login {
   padding: 20px;
   background: #fff;
   border-radius: 4px;
+}
+
+/* responsiveness */
+@media (max-width: 768px) {
+  .home {
+    grid-template-columns:1fr;
+  gap: 10px;
+
+  }
+  input {
+    padding: 10px;
+    margin-top: 5px;
+    margin-bottom: 10px;
+    width: 80%;
+  }
+}
+@media (max-width:632px) {
+  header h1{
+    font-size: 1.5em;
+  }
+  nav a, nav button,nav span {
+    font-size: 0.8em;
+  }
+}
+@media (max-width:476px) {
+  header .container {
+   display: block;
+   text-align: center;
+  }
+  nav {
+    display: block;
+  }
 }
