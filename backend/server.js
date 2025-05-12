@@ -1,5 +1,6 @@
 require('dotenv').config()
 
+const cors = require('cors');
 const express = require('express')
 const mongoose = require('mongoose')
 const workoutRoutes = require('./routes/workouts')
@@ -8,6 +9,19 @@ const userRoutes = require('./routes/user')
 // express app
 const app = express()
 
+// CORS options
+const corsOptions = {
+  origin: 'https://mern-stack-notes.vercel.app',  
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],  // Ensure you allow 'Authorization' header
+  credentials: true, // If you are using cookies or authentication that needs credentials
+};
+
+// Apply CORS globally
+app.use(cors(corsOptions));
+
+// Ensure Express handles preflight requests automatically
+app.options('*', cors(corsOptions))
 // middleware
 app.use(express.json())
 
