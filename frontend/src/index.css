@@ -145,6 +145,7 @@ form.signup, form.login {
     margin-bottom: 10px;
     width: 100%;
   }
+
 }
 @media (max-width:632px) {
   header h1{
@@ -163,3 +164,4 @@ form.signup, form.login {
     display: block;
   }
 }
+
